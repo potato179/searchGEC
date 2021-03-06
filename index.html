@@ -21,24 +21,36 @@
 </head>
 <body>
     <header class="text-center py-5 mb-4" style = "background-color:#283891;">
-        <h1 class = "bold white">3호선 쵸퍼 검색기</h1>
+        <h1 class = "bold white">3호선 갤러리</h1>
     </header>
     <main class = "container center">
         <br><br>
-        <h2><del>오 S차다! 나이스 나이스! 좋아 좋아! S차다 나이스!</del></h2>
         <br><br>
         <div class = "card border-0 shadow text-dark container center">
             <br><br>
             <div>
-                <div class="input-group mb-3" style = "width: 75%; float: left">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon3">S</span>
-                    </div>
+                <select class = "form-select" id = "headNo" aria-label = "Default select example" style = "width: 25%; float: left">
+                    <option selected>머리글자</option>
+                    <option value = "S">S</option>
+                    <option value = "K">K</option>
+                </select>
+                <div class="input-group mb-3" style = "width: 50%; float: left">
                     <input type="text" class="form-control" id = "number" aria-describedby="basic-addon3">
                 </div>
-                <button class = "btn btn-secondary" style = "width: 25%; float: left" onclick = "searchNo()"><span>열차번호 검색</span></button>
+                <button class = "btn btn-secondary" style = "width: 25%; float: left" onclick = "searchNo()"><span>검색</span></button>
             </div>
-            <h3 class = "gray" id = "results">열차번호를 검색해서 쵸퍼인지 확인해보세요!</h3>
+            <div>
+                <button onclick = "searchTime()">시간표 검색</button>
+                <button onclick = "searchDelay()">지연 시간표</button>
+                <button onclick = "searchTable()">운전 시각표</button>
+                <br>
+                <p>개조 쵸퍼 편성: 316~320, 341~344 / 미개조 쵸퍼 편성: 334~335, 345~348</p>
+            </div>
+            <br><br>
+            <h3 class = "gray" id = "results"></h3>
+            <div id = "railblue" class = "ratio ratio-16x9">
+            </div>
+            <p>source: rail.blue</p>
             <br><br>
             <h5 class = "gray">
                 
@@ -52,7 +64,7 @@
         <br>
         <div class="container">
             <h5 class = "white">LINKS</h5>
-            <iframe width="1239" height="697" src="https://www.youtube.com/embed/AO4BzUzThQg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/AO4BzUzThQg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <div class="row">
                 <div class="col-xs-15 col-md-10">
                 <h6 class = "white"><a href = "https://github.com/potato179/findFlag">소스 코드</a>&nbsp;&nbsp;<a href = "https://m.me/makerpotato179">문의하기</a></h6>
@@ -73,22 +85,41 @@
     </footer>
     <script>
         function searchNo(){
-            const remodels = ["3005", "3060", "3099", "3020", "3051", "3122", "3149", "3066", "3073", "3070", "3077", "3086", "3095", "3090", "3101", "3094", "3105", "3016", "3047", "3028", "3031", "3104", "3115",
-            "3295", "3350", "3359", "3402", "3421", "3273", "3332", "3367", "3410", "3425", "3277", "3336", "3371", "3414", "3427", "3298", "3337", "3382", "3405", "3304", "3315", "3364", 
-            "3288", "3327", "3294", "3333", "3380", "3387", "3300", "3311", "3362", "3391", "3058", "3097", "3158", "3159", "3204", "3225", "3274", "3281"]
-            console.log(remodels.includes($('#number').val()))
-            console.log($('#number').val())
-            if($('#number').val() === "3282" || $('#number').val() === "3291"){
-                $("#results").html('<h3 class = "green" id = "results">해당 열차는 미개조 쵸퍼 열차 입니다!</h3>')
-            } 
-            if(remodels.includes($('#number').val()) === true){
-                $("#results").html('<h3 class = "green" id = "results">해당 열차는 개조 쵸퍼 열차 입니다!</h3>')
+            var headNo = $("#headNo option:selected").val();
+            var trainNo = $('#number').val();
+            console.log($("#headNo option:selected").val())
+            if($("#headNo option:selected").val() === "S"){
+                const chooper = ["3282", "3291"]
+                const remodels = ["3005", "3060", "3099", "3020", "3051", "3122", "3149", "3066", "3073", "3070", "3077", "3086", "3095", "3090", "3101", "3094", "3105", "3016", "3047", "3028", "3031", "3104", "3115",
+                "3295", "3350", "3359", "3402", "3421", "3273", "3332", "3367", "3410", "3425", "3277", "3336", "3371", "3414", "3427", "3298", "3337", "3382", "3405", "3304", "3315", "3364", 
+                "3288", "3327", "3294", "3333", "3380", "3387", "3300", "3311", "3362", "3391", "3058", "3097", "3158", "3159", "3204", "3225", "3274", "3281"]
+                if(chooper.includes($('#number').val()) === true){
+                    $("#results").html('<h3 class = "green" id = "results">해당 열차는 미개조 쵸퍼 열차 입니다!</h3>')
+                } 
+                if(remodels.includes($('#number').val()) === true){
+                    $("#results").html('<h3 class = "green" id = "results">해당 열차는 개조 쵸퍼 열차 입니다!</h3>')
+                }
             }
-            else{
-                $("#results").html('<h3 class = "red" id = "results">열차 번호를 잘못 입력하셨거나 쵸퍼제어 열차가 아닙니다.</h3>')
-            }
+            $("#railblue").html(`<iframe src="https://rail.blue/railroad/logis/Default.aspx?date=&train=${headNo}${trainNo}#!" frameborder="0"></iframe>`)
         }
 
+        function searchTime(){
+            var headNo = $("#headNo option:selected").val();
+            var trainNo = $('#number').val(); 
+            $("#railblue").html(`<iframe src="https://rail.blue/railroad/logis/scheduleinfo.aspx?date=&train=${headNo}${trainNo}#!" frameborder="0"></iframe>`)
+        }
+
+        function searchDelay(){
+            var headNo = $("#headNo option:selected").val();
+            var trainNo = $('#number').val(); 
+            $("#railblue").html(`<iframe src="https://rail.blue/railroad/logis/magiainfo.aspx?date=&train=${headNo}${trainNo}#!" frameborder="0"></iframe>`)
+        }
+
+        function searchTable(){
+            var headNo = $("#headNo option:selected").val();
+            var trainNo = $('#number').val(); 
+            $("#railblue").html(`<iframe src="https://rail.blue/railroad/logis/driveschedule.aspx?date=20210306&train=${headNo}${trainNo}#!" frameborder="0"></iframe>`)
+        }
         /*
         지축소속 출근시간
         1. 3005(구파발발 오금행) -> 3060(오금발 대화행) -> 3099(대화발 삼송행)
